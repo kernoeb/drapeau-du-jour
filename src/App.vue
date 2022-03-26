@@ -5,9 +5,9 @@
       class="w-full max-w-xs"
     >
       <WinParticles v-if="isValid" />
-      <div class="mb-9 border-2 p-2 rounded-lg">
+      <div class="border-2 p-2 rounded-lg">
         <h1
-          class="text-4xl font-bold text-gray-700 justify-center flex"
+          class="mb-1 text-4xl font-bold text-gray-700 justify-center flex"
           style="font-family: 'Fugaz One',serif; font-weight: 200;"
         >
           <span
@@ -15,6 +15,13 @@
             :style="{'background-image': 'linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url(\'/flags/' + answer.flag + '.png\')'}"
           >Drapeau du jour</span>
         </h1>
+      </div>
+      <div class="mb-9 justify-center flex italic text-gray-400 hover:text-blue-700 text-sm">
+        <a
+          href="https://github.com/kernoeb/drapeau-du-jour/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >github.com/<b>kernoeb</b>/drapeau-du-jour</a>
       </div>
       <div class="flex flex-col mb-9">
         <div class="flex justify-center mb-1">
@@ -54,6 +61,15 @@
           placeholder="Capitale du pays"
           @input="capital = $event.target.value"
         >
+      </div>
+      <div class="justify-center flex">
+        <button
+          v-if="!isValid && !giveup"
+          class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-1 px-3 border-b-4 border-orange-700 hover:border-orange-500 rounded"
+          @click="giveup = true"
+        >
+          Abandonner
+        </button>
       </div>
       <div
         v-if="isValid"
@@ -118,14 +134,6 @@
         </p>
       </div>
     </div>
-    <button
-      v-if="!isValid && !giveup"
-      style="bottom: 5px;"
-      class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 border-b-4 border-orange-700 hover:border-orange-500 rounded absolute"
-      @click="giveup = true"
-    >
-      Abandonner
-    </button>
   </div>
 </template>
 
