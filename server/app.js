@@ -5,7 +5,7 @@ const path = require('path')
 const cors = require('cors')
 const serveStatic = require('serve-static')
 
-const dailyJson = process.env.NODE_ENV === 'production' ? 'daily.json' : '/dev/daily.json'
+const dailyJson = process.env.NODE_ENV === 'production' ? 'daily.json' : './dev/daily.json'
 if (!fs.existsSync(dailyJson)) {
   console.error('daily.json not found')
   process.exit(1)

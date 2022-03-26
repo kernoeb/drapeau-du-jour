@@ -84,7 +84,48 @@
           </a>
         </p>
       </div>
+      <div
+        v-if="!isValid && giveup"
+        class="bg-orange-500 text-white px-4 py-3 rounded shadow-lg"
+      >
+        <p class="font-bold">
+          Dommage
+          <span class="emoji">😔</span>
+        </p>
+        <div class="p-1">
+          <div>Le pays était <span class="font-bold">{{ answer.rawCountry[0] }}</span></div>
+          <div>La capitale était <span class="font-bold">{{ answer.rawCapital.join(', ') }}</span></div>
+        </div>
+        <p>
+          <a
+            :href="`https://www.google.com/maps/search/?api=1&query=${answer.rawCountry}`"
+            target="_blank"
+            class="text-gray-200"
+            rel="noopener noreferrer"
+          >
+            - Voir sur Google Maps
+          </a>
+        </p>
+        <p>
+          <a
+            :href="`https://geobtenu.netlify.app/flag/${encodeURIComponent(answer.flag)}`"
+            target="_blank"
+            class="text-gray-200"
+            rel="noopener noreferrer"
+          >
+            - Géobtenu (/flag/{{ answer.flag }})
+          </a>
+        </p>
+      </div>
     </div>
+    <button
+      v-if="!isValid && !giveup"
+      style="bottom: 5px;"
+      class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 border-b-4 border-orange-700 hover:border-orange-500 rounded absolute"
+      @click="giveup = true"
+    >
+      Abandonner
+    </button>
   </div>
 </template>
 
@@ -101,7 +142,8 @@ export default {
     return {
       answer: {},
       country: '',
-      capital: ''
+      capital: '',
+      giveup: false,
     }
   },
   computed: {
@@ -137,6 +179,7 @@ export default {
         capital: response.capital.map(this.sanitize),
         flag: response.flag,
         rawCountry: response.country,
+        rawCapital: response.capital,
         date: response.date
       }
 
