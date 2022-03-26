@@ -4,6 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
 const serveStatic = require('serve-static')
+const dayjs = require('dayjs')
 
 const dailyJson = process.env.NODE_ENV === 'production' ? 'daily.json' : './dev/daily.json'
 if (!fs.existsSync(dailyJson)) {
@@ -23,8 +24,7 @@ const s = path.join(process.cwd(), '/dist/')
 app.use(serveStatic(s))
 
 app.use('/api', () => {
-  const start = new Date()
-  const d = start.toISOString().slice(0, 10)
+  const d = dayjs().format('YYYY-MM-DD')
   const todayFlag = data[d]
   const ret = countries[todayFlag]
   ret.flag = todayFlag
@@ -32,6 +32,4 @@ app.use('/api', () => {
   return ret
 })
 
-
 listen(app).then(r => console.log(`Listening on ${r.url}`))
-
