@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    restart: always
+    stdin_open: true
+    tty: true
+    ports:
+      - "14400:3000"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./dev/daily.json:/app/daily.json:ro"
