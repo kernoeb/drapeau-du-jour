@@ -105,7 +105,8 @@
   },
   "ax": {
     "country": [
-      "Îles Åland"
+      "Îles Åland",
+      "Åland"
     ],
     "capital": [
       "Mariehamn"
@@ -121,7 +122,8 @@
   },
   "ba": {
     "country": [
-      "Bosnie-Herzégovine"
+      "Bosnie-Herzégovine",
+      "Bosnie-et-Herzégovine"
     ],
     "capital": [
       "Sarajevo"
@@ -201,7 +203,8 @@
   },
   "bm": {
     "country": [
-      "Bermudes"
+      "Bermudes",
+      "Les Bermudes"
     ],
     "capital": [
       "Hamilton"
@@ -209,7 +212,8 @@
   },
   "bn": {
     "country": [
-      "Brunéi"
+      "Brunéi",
+      "Brunéi Darussalam"
     ],
     "capital": [
       "Bandar Seri Begawan"
@@ -220,7 +224,8 @@
       "Bolivie"
     ],
     "capital": [
-      "Sucre"
+      "Sucre",
+      "La Paz"
     ]
   },
   "bq": {
@@ -241,7 +246,8 @@
   },
   "bs": {
     "country": [
-      "Bahamas"
+      "Bahamas",
+      "Les Bahamas"
     ],
     "capital": [
       "Nassau"
@@ -265,7 +271,8 @@
   },
   "by": {
     "country": [
-      "Biélorussie"
+      "Biélorussie",
+      "Bélarus"
     ],
     "capital": [
       "Minsk"
@@ -289,7 +296,8 @@
   },
   "cc": {
     "country": [
-      "Îles Cocos"
+      "Îles Cocos",
+      "Cocos Islands"
     ],
     "capital": [
       "West Island"
@@ -366,7 +374,8 @@
       "Chine"
     ],
     "capital": [
-      "Pékin"
+      "Pékin",
+      "Beijing"
     ]
   },
   "co": {
@@ -427,7 +436,8 @@
   },
   "cz": {
     "country": [
-      "Tchéquie"
+      "Tchéquie",
+      "République tchèque"
     ],
     "capital": [
       "Prague"
@@ -451,7 +461,8 @@
   },
   "dk": {
     "country": [
-      "Danemark"
+      "Danemark",
+      "Royaume du Danemark"
     ],
     "capital": [
       "Copenhague"
@@ -986,6 +997,7 @@
       "Sri Lanka"
     ],
     "capital": [
+      "Sri Jayawardenapura",
       "Sri Jayawardenapura Kotte"
     ]
   },
@@ -1079,10 +1091,12 @@
   },
   "mh": {
     "country": [
-      "Îles Marshall"
+      "Îles Marshall",
+      "les Marshall"
     ],
     "capital": [
-      "Delap-Uliga-Darrit"
+      "Delap-Uliga-Darrit",
+      "Majuro"
     ]
   },
   "mk": {
@@ -1723,7 +1737,8 @@
       "États-Unis"
     ],
     "capital": [
-      "Washington D.C."
+      "Washington D.C.",
+      "Washington"
     ]
   },
   "uy": {
