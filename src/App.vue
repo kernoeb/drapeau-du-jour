@@ -151,7 +151,7 @@ export default {
       answer: {},
       country: '',
       capital: '',
-      giveup: false,
+      giveup: false
     }
   },
   computed: {
@@ -170,7 +170,7 @@ export default {
       if (this.answer.country.includes(this.sanitize(this.country))) count++
       if (this.answer.capital.includes(this.sanitize(this.capital))) count++
       return count
-    },
+    }
   },
   watch: {
     country() {

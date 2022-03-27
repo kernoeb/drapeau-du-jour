@@ -10,10 +10,10 @@ export default defineConfig({
       families: [{
         name: 'Fugaz One', styles: 'ital,wght@0,400;1,200', defer: true
       }]
-    },
+    }
   })], resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
-  },
+      "@": fileURLToPath(new URL("./src", import.meta.url))
+    }
+  }
 })

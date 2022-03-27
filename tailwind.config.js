@@ -1,7 +1,7 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./src/**/*.{vue,js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
@@ -12,9 +12,9 @@ module.exports = {
         '3': '3px',
         '4': '4px',
         '6': '6px',
-        '8': '8px',
+        '8': '8px'
       }
-    },
+    }
   },
-  plugins: [],
+  plugins: []
 }
