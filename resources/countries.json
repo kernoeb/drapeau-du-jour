@@ -25,7 +25,8 @@
   },
   "ag": {
     "country": [
-      "Antigua-Et-Barbuda"
+      "Antigua-Et-Barbuda",
+      "Antigue-et-Barbude"
     ],
     "capital": [
       "Saint John's"
@@ -1092,7 +1093,7 @@
   "mh": {
     "country": [
       "Îles Marshall",
-      "les Marshall"
+      "Les Marshall"
     ],
     "capital": [
       "Delap-Uliga-Darrit",
