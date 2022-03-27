@@ -5,7 +5,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "dev-server": "nodemon server/app.js",
+    "dev-server": "PORT=7059 nodemon server/app.js",
     "lint": "eslint src",
     "preview": "vite preview",
     "server": "node server/app.js"

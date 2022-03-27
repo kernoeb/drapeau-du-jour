@@ -114,7 +114,7 @@
         </div>
         <p>
           <a
-            :href="`https://www.google.com/maps/search/?api=1&query=${answer.rawCountry}`"
+            :href="`https://www.google.com/maps/search/?api=1&query=Pays%20${encodeURIComponent(answer.rawCountry)}`"
             target="_blank"
             class="text-gray-200"
             rel="noopener noreferrer"

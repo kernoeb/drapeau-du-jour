@@ -555,7 +555,8 @@
   },
   "fk": {
     "country": [
-      "Îles Malouines"
+      "Îles Malouines",
+      "Îles Falkland"
     ],
     "capital": [
       "Port Stanley"
