@@ -139,7 +139,7 @@
 
 <script>
 import {normalizeSync} from 'normalize-diacritics'
-import WinParticles from "./components/WinParticles.vue"
+import WinParticles from './components/WinParticles.vue'
 import ky from 'ky'
 
 export default {
@@ -213,7 +213,7 @@ export default {
     })
   },
   mounted() {
-    console.log("%cTricheur", "color: #FF0061; font-size: 2em; font-weight: bold;")
+    console.log('%cTricheur', 'color: #FF0061; font-size: 2em; font-weight: bold;')
   },
   methods: {
     updateLocalStorage() {

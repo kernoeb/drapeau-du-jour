@@ -3,18 +3,19 @@ module.exports = {
     node: true
   },
   globals: {
-    defineProps: "readonly",
-    defineEmits: "readonly",
-    withDefaults: "readonly"
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    withDefaults: 'readonly'
   },
   extends: [
-    "eslint:recommended",
-    "plugin:vue/vue3-recommended"
+    'eslint:recommended',
+    'plugin:vue/vue3-recommended'
   ],
   rules: {
-    "no-trailing-spaces": "error",
-    "semi": ["error", "never"],
-    indent: ["error", 2],
-    "comma-dangle": "error"
+    'no-trailing-spaces': 'error',
+    'semi': ['error', 'never'],
+    indent: ['error', 2],
+    'comma-dangle': 'error',
+    quotes: ['error', 'single']
   }
 }

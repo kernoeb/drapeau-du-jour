@@ -12,7 +12,7 @@ if (!fs.existsSync(dailyJson)) {
   process.exit(1)
 }
 
-console.log("NODE_ENV:", process.env.NODE_ENV)
+console.log('NODE_ENV:', process.env.NODE_ENV)
 
 const data = JSON.parse(fs.readFileSync(path.join(process.cwd(), dailyJson), 'utf8'))
 const countries = JSON.parse(fs.readFileSync(path.join(process.cwd(), '/resources/countries.json'), 'utf8'))
@@ -33,3 +33,4 @@ app.use('/api', () => {
 })
 
 listen(app).then(r => console.log(`Listening on ${r.url}`))
+
