@@ -1,13 +1,12 @@
-FROM node:16.15.0-alpine3.15 as build
+FROM node:16.15.0-alpine3.15 as build-tools
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk add --no-cache curl bash
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN npm install -g pnpm clean-modules@2.0.4
 
-# https://github.com/duniul/clean-modules
-RUN pnpm i -g clean-modules@2.0.4
+FROM build-tools as build
+LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 WORKDIR /home/node/build
 RUN chown -R node:node /home/node/build
@@ -27,7 +26,6 @@ COPY --chown=node:node postcss.config.js ./postcss.config.js
 COPY --chown=node:node index.html ./index.html
 
 RUN pnpm run build
-
 RUN rm -rf node_modules
 
 ENV NODE_ENV production
