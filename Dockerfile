@@ -1,4 +1,4 @@
-FROM node:16.14.2-alpine3.15 as build
+FROM node:16.15.0-alpine3.15 as build
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk add --no-cache curl bash
@@ -35,7 +35,7 @@ RUN pnpm install --prod --no-optional
 
 RUN clean-modules --yes
 
-FROM node:16.14.2-alpine3.15 as server
+FROM node:16.15.0-alpine3.15 as server
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk --no-cache add dumb-init curl bash

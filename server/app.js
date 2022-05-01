@@ -5,6 +5,7 @@ const path = require('path')
 const cors = require('cors')
 const serveStatic = require('serve-static')
 const dayjs = require('dayjs')
+const compression = require('compression')
 
 const dailyJson = process.env.NODE_ENV === 'production' ? 'daily.json' : './dev/daily.json'
 if (!fs.existsSync(dailyJson)) {
@@ -19,6 +20,7 @@ const countries = JSON.parse(fs.readFileSync(path.join(process.cwd(), '/resource
 
 const app = createApp()
 app.use(cors())
+app.use(compression())
 
 const s = path.join(process.cwd(), '/dist/')
 app.use(serveStatic(s))
