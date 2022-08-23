@@ -11,26 +11,26 @@
           style="font-family: 'Fugaz One',serif; font-weight: 200;"
         >
           <span
-            class="bg-text"
             :style="{'background-image': 'linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url(\'/flags/' + answer.flag + '.png\')'}"
+            class="bg-text"
           >Drapeau du jour</span>
         </h1>
       </div>
       <div class="mb-9 justify-center flex italic text-gray-400 hover:text-blue-700 text-sm">
         <a
           href="https://github.com/kernoeb/drapeau-du-jour/"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >github.com/<b>kernoeb</b>/drapeau-du-jour</a>
       </div>
       <div class="flex flex-col mb-9">
         <div class="flex justify-center mb-1">
           <img
             v-if="answer.flag"
-            style="height: 164px; pointer-events: none;"
-            class="border-2 rounded border-gray-500"
-            alt="flag"
             :src="'/flags/' + answer.flag + '.png'"
+            alt="flag"
+            class="border-2 rounded border-gray-500"
+            style="height: 164px; pointer-events: none;"
           >
         </div>
         <div class="flex justify-center text-gray-400">
@@ -41,24 +41,24 @@
         <input
           id="country"
           ref="country"
-          :value="country"
-          autofocus
-          autocomplete="off"
           :class="{'border-red-500': country && !validCountry, 'border-green-500': validCountry}"
+          :value="country"
+          autocomplete="off"
+          autofocus
           class="shadow border-2 appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-md mb-3"
-          type="text"
           placeholder="Nom du pays"
+          type="text"
           @input="country = $event.target.value"
         >
         <input
           id="capital"
           ref="capital"
+          :class="{'border-red-500': capital && !validCapital, 'border-green-500': validCapital}"
           :value="capital"
           autocomplete="off"
-          :class="{'border-red-500': capital && !validCapital, 'border-green-500': validCapital}"
           class="shadow border-2 appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-md mb-3"
-          type="text"
           placeholder="Capitale du pays"
+          type="text"
           @input="capital = $event.target.value"
         >
       </div>
@@ -80,24 +80,16 @@
           <span class="emoji">😄</span>
         </p>
         <p>
-          <a
-            :href="`https://www.google.com/maps/search/?api=1&query=${answer.rawCountry}`"
-            target="_blank"
-            class="text-gray-200"
-            rel="noopener noreferrer"
-          >
-            - Voir sur Google Maps
-          </a>
+          <GoogleMapsLink
+            v-if="answer?.rawCountry"
+            :raw-country="answer.rawCountry[0]"
+          />
         </p>
         <p>
-          <a
-            :href="`https://geobtenu.netlify.app/flag/${encodeURIComponent(answer.flag)}`"
-            target="_blank"
-            class="text-gray-200"
-            rel="noopener noreferrer"
-          >
-            - Géobtenu (/flag/{{ answer.flag }})
-          </a>
+          <GeobtenuLink
+            v-if="answer?.flag"
+            :flag="answer.flag"
+          />
         </p>
       </div>
       <div
@@ -113,24 +105,16 @@
           <div>La capitale était <span class="font-bold">{{ answer.rawCapital.join(', ') }}</span></div>
         </div>
         <p>
-          <a
-            :href="`https://www.google.com/maps/search/?api=1&query=Pays%20${encodeURIComponent(answer.rawCountry)}`"
-            target="_blank"
-            class="text-gray-200"
-            rel="noopener noreferrer"
-          >
-            - Voir sur Google Maps
-          </a>
+          <GoogleMapsLink
+            v-if="answer?.rawCountry"
+            :raw-country="answer.rawCountry[0]"
+          />
         </p>
         <p>
-          <a
-            :href="`https://geobtenu.netlify.app/flag/${encodeURIComponent(answer.flag)}`"
-            target="_blank"
-            class="text-gray-200"
-            rel="noopener noreferrer"
-          >
-            - Géobtenu (/flag/{{ answer.flag }})
-          </a>
+          <GeobtenuLink
+            v-if="answer?.flag"
+            :flag="answer.flag"
+          />
         </p>
       </div>
     </div>
@@ -140,10 +124,14 @@
 <script>
 import {normalizeSync} from 'normalize-diacritics'
 import WinParticles from './components/WinParticles.vue'
+import GeobtenuLink from '@/components/GeobtenuLink.vue'
+import GoogleMapsLink from '@/components/GoogleMapsLink.vue'
 import ky from 'ky'
 
 export default {
   components: {
+    GeobtenuLink,
+    GoogleMapsLink,
     WinParticles
   },
   data() {
@@ -163,7 +151,7 @@ export default {
     },
     isValid() {
       return this.answer.country.includes(this.sanitize(this.country))
-          && this.answer.capital.includes(this.sanitize(this.capital))
+        && this.answer.capital.includes(this.sanitize(this.capital))
     },
     numberOfValidAnswers() {
       let count = 0
