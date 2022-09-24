@@ -19,3 +19,9 @@ Create a `daily.json` file in the root of your project.
 ```bash
 docker-compose pull && docker-compose up -d --remove-orphans
 ```
+
+### Reduce image size (optional)
+
+```bash
+docker-slim build --target ddj-test --tag ddj2-test --include-path /app/dist --mount "$PWD"/dev/daily.json:/app/daily.json
+```
