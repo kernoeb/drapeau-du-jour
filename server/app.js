@@ -6,6 +6,10 @@ const cors = require('cors')
 const serveStatic = require('serve-static')
 const dayjs = require('dayjs')
 const compression = require('compression')
+const { Crypto } = require('@peculiar/webcrypto')
+global.crypto = new Crypto()
+
+const passworder = require('browser-passworder')
 
 const dailyJson = process.env.NODE_ENV === 'production' ? 'daily.json' : './dev/daily.json'
 if (!fs.existsSync(dailyJson)) {
@@ -19,19 +23,24 @@ const data = JSON.parse(fs.readFileSync(path.join(process.cwd(), dailyJson), 'ut
 const countries = JSON.parse(fs.readFileSync(path.join(process.cwd(), '/resources/countries.json'), 'utf8'))
 
 const app = createApp()
-app.use(cors())
+app.use(cors({
+  exposedHeaders: ['X-Flag-Date']
+}))
 app.use(compression())
 
 const s = path.join(process.cwd(), '/dist/')
 app.use(serveStatic(s))
 
-app.use('/api', () => {
+app.use('/api', (req, res) => {
   const d = dayjs().format('YYYY-MM-DD')
   const todayFlag = data[d]
   const ret = countries[todayFlag]
   ret.flag = todayFlag
   ret.date = d
-  return ret
+
+  res.setHeader('X-Flag-Date', d)
+  res.setHeader('Content-Type', 'application/json')
+  return passworder.encrypt(d, ret)
 })
 
 listen(app).then(r => console.log(`Listening on ${r.url}`))

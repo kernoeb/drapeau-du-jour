@@ -11,9 +11,19 @@ export default defineConfig({
         name: 'Fugaz One', styles: 'ital,wght@0,400;1,200', defer: true
       }]
     }
-  })], resolve: {
+  })],
+  resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'crypto': 'crypto-browserify'
+    }
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      // Node.js global to browser globalThis
+      define: {
+        global: 'globalThis'
+      }
     }
   }
 })

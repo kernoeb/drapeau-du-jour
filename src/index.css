@@ -1,4 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+html, body {
+  font-family: 'Raleway', sans-serif;
+}
+
+#app {
+  font-family: 'Raleway', sans-serif;
+}

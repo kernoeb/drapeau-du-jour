@@ -126,6 +126,7 @@ import {normalizeSync} from 'normalize-diacritics'
 import WinParticles from './components/WinParticles.vue'
 import GeobtenuLink from '@/components/GeobtenuLink.vue'
 import GoogleMapsLink from '@/components/GoogleMapsLink.vue'
+import browserPassworder from 'browser-passworder'
 import ky from 'ky'
 
 export default {
@@ -168,40 +169,44 @@ export default {
       this.updateLocalStorage()
     }
   },
-  created() {
-    ky.get(import.meta.env.PROD ? '/api' : 'http://localhost:7059/api').json().then(response => {
-      this.answer = {
-        country: response.country.map(this.sanitize),
-        capital: response.capital.map(this.sanitize),
-        flag: response.flag,
-        rawCountry: response.country,
-        rawCapital: response.capital,
-        date: response.date
-      }
+  async created() {
+    const r = await ky.get(import.meta.env.PROD ? '/api' : 'http://localhost:7059/api')
+    const json = await r.text()
+    const response = await browserPassworder.decrypt(r.headers.get('X-Flag-Date'), json) // just to avoid really easy cheating
 
-      if (localStorage.getItem('saved')) {
-        try {
-          const saved = JSON.parse(localStorage.getItem('saved'))
-          if (saved.date === this.answer.date) {
-            this.country = saved.country || ''
-            this.capital = saved.capital || ''
-          } else {
-            localStorage.removeItem('saved')
-          }
-        } catch (e) {
+    this.answer = {
+      country: response.country.map(this.sanitize),
+      capital: response.capital.map(this.sanitize),
+      flag: response.flag,
+      rawCountry: response.country,
+      rawCapital: response.capital,
+      date: response.date
+    }
+
+    if (localStorage.getItem('saved')) {
+      try {
+        const saved = JSON.parse(localStorage.getItem('saved'))
+        if (saved.date === this.answer.date) {
+          this.country = saved.country || ''
+          this.capital = saved.capital || ''
+        } else {
           localStorage.removeItem('saved')
         }
+      } catch (e) {
+        localStorage.removeItem('saved')
       }
+    }
 
-      this.$watch('isValid', () => {
-        if (this.isValid) {
-          this.closeKeyboard()
-        }
-      })
+    this.$watch('isValid', () => {
+      if (this.isValid) {
+        this.closeKeyboard()
+      }
     })
   },
   mounted() {
-    console.log('%cTricheur', 'color: #FF0061; font-size: 2em; font-weight: bold;')
+    console.clear()
+    console.log('%cTricheur', 'color: #FF0061; font-size: 10em; font-weight: bold;')
+    console.log('%cPlus compliqué maintenant', 'color: #FF0061; font-size: 2em; font-weight: bold;')
   },
   methods: {
     updateLocalStorage() {
