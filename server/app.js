@@ -1,8 +1,8 @@
-const { listen } = require('listhen')
-const { createApp } = require('h3')
+const { createServer } = require('http')
+const { createApp, toNodeListener, fromNodeMiddleware} = require('h3')
 const fs = require('fs')
 const path = require('path')
-const cors = require('cors')
+const { defineCorsEventHandler } = require('@nozomuikuta/h3-cors')
 const serveStatic = require('serve-static')
 const dayjs = require('dayjs')
 const compression = require('compression')
@@ -23,15 +23,15 @@ const data = JSON.parse(fs.readFileSync(path.join(process.cwd(), dailyJson), 'ut
 const countries = JSON.parse(fs.readFileSync(path.join(process.cwd(), '/resources/countries.json'), 'utf8'))
 
 const app = createApp()
-app.use(cors({
-  exposedHeaders: ['X-Flag-Date']
+app.use(defineCorsEventHandler({
+  exposeHeaders: ['X-Flag-Date']
 }))
-app.use(compression())
+app.use(fromNodeMiddleware(compression()))
 
 const s = path.join(process.cwd(), '/dist/')
-app.use(serveStatic(s))
+app.use(fromNodeMiddleware(serveStatic(s)))
 
-app.use('/api', (req, res) => {
+app.use('/api', fromNodeMiddleware((req, res) => {
   const d = dayjs().format('YYYY-MM-DD')
   const todayFlag = data[d]
   const ret = countries[todayFlag]
@@ -41,6 +41,6 @@ app.use('/api', (req, res) => {
   res.setHeader('X-Flag-Date', d)
   res.setHeader('Content-Type', 'application/json')
   return passworder.encrypt(d, ret)
-})
+}))
 
-listen(app).then(r => console.log(`Listening on ${r.url}`))
+createServer(toNodeListener(app)).listen(process.env.PORT || 3000)
