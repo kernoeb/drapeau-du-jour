@@ -1,12 +1,12 @@
-const { createServer } = require('http')
-const { createApp, toNodeListener, fromNodeMiddleware} = require('h3')
+const {createServer} = require('http')
+const {createApp, toNodeListener, fromNodeMiddleware, eventHandler} = require('h3')
 const fs = require('fs')
 const path = require('path')
-const { defineCorsEventHandler } = require('@nozomuikuta/h3-cors')
+const {defineCorsEventHandler} = require('@nozomuikuta/h3-cors')
 const serveStatic = require('serve-static')
 const dayjs = require('dayjs')
 const compression = require('compression')
-const { Crypto } = require('@peculiar/webcrypto')
+const {Crypto} = require('@peculiar/webcrypto')
 global.crypto = new Crypto()
 
 const passworder = require('browser-passworder')
@@ -21,6 +21,9 @@ console.log('NODE_ENV:', process.env.NODE_ENV)
 
 const data = JSON.parse(fs.readFileSync(path.join(process.cwd(), dailyJson), 'utf8'))
 const countries = JSON.parse(fs.readFileSync(path.join(process.cwd(), '/resources/countries.json'), 'utf8'))
+
+const countryNames = Object.keys(countries).map((key) => countries[key].country).flat().sort((a, b) => a.localeCompare(b))
+const capitals = Object.keys(countries).map((key) => countries[key].capital).flat().sort((a, b) => a.localeCompare(b))
 
 const app = createApp()
 app.use(defineCorsEventHandler({
@@ -42,5 +45,9 @@ app.use('/api', fromNodeMiddleware((req, res) => {
   res.setHeader('Content-Type', 'application/json')
   return passworder.encrypt(d, ret)
 }))
+
+app.use('/countries', eventHandler(() => countryNames))
+app.use('/capitals', eventHandler(() => capitals))
+
 
 createServer(toNodeListener(app)).listen(process.env.PORT || 3000)

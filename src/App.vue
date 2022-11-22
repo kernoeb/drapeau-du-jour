@@ -38,29 +38,65 @@
         </div>
       </div>
       <div class="mb-3">
-        <input
-          id="country"
-          ref="country"
-          :class="{'border-red-500': country && !validCountry, 'border-green-500': validCountry}"
-          :value="country"
-          autocomplete="off"
-          autofocus
-          class="shadow border-2 appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-md mb-3"
-          placeholder="Nom du pays"
-          type="text"
-          @input="country = $event.target.value"
-        >
-        <input
-          id="capital"
-          ref="capital"
-          :class="{'border-red-500': capital && !validCapital, 'border-green-500': validCapital}"
-          :value="capital"
-          autocomplete="off"
-          class="shadow border-2 appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-md mb-3"
-          placeholder="Capitale du pays"
-          type="text"
-          @input="capital = $event.target.value"
-        >
+        <div class="w-full relative mb-3">
+          <input
+            id="country"
+            ref="country"
+            :class="{'border-red-500': country && !validCountry, 'border-green-500': validCountry}"
+            :value="country"
+            autocomplete="off"
+            autofocus
+            class="shadow border-2 appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-md"
+            placeholder="Nom du pays"
+            type="text"
+            @input="country = $event.target.value"
+          >
+          <div
+            v-if="showCountryList"
+            style="max-height: 300px;"
+            class="absolute w-full z-50 bg-white border border-gray-300 max-height-48 overflow-y-auto overflow-y-scroll shadow-md scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full"
+          >
+            <ul class="py-1">
+              <li
+                v-for="(value, index) in countryListComputed"
+                :key="'country_' + value + index"
+                class="px-3 py-2 cursor-pointer hover:bg-gray-200"
+                @click="country = value"
+              >
+                {{ value }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-full relative mb-3">
+          <input
+            id="capital"
+            ref="capital"
+            :class="{'border-red-500': capital && !validCapital, 'border-green-500': validCapital}"
+            :value="capital"
+            autocomplete="off"
+            class="shadow border-2 appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-md"
+            placeholder="Capitale du pays"
+            type="text"
+            @input="capital = $event.target.value"
+          >
+          <div
+            v-if="showCapitalList"
+            style="max-height: 300px;"
+            class="absolute w-full z-50 bg-white border border-gray-300 max-height-48 overflow-y-auto overflow-y-scroll shadow-md scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full"
+          >
+            <ul class="py-1">
+              <li
+                v-for="(value, index) in capitalListComputed"
+                :key="'capital_' + value + index"
+                class="px-3 py-2 cursor-pointer hover:bg-gray-200"
+                @click="capital = value"
+              >
+                {{ value }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div class="justify-center flex">
         <button
@@ -140,10 +176,24 @@ export default {
       answer: {},
       country: '',
       capital: '',
-      giveup: false
+      giveup: false,
+      countryList: [],
+      capitalList: []
     }
   },
   computed: {
+    countryListComputed() {
+      return this.countryList.filter(v => v && this.country && v.toLowerCase().includes(this.country.trim().toLowerCase()))
+    },
+    capitalListComputed() {
+      return this.capitalList.filter(v => v && this.capital && v.toLowerCase().includes(this.capital.trim().toLowerCase()))
+    },
+    showCountryList() {
+      return this.country?.trim() && this.countryListComputed.length && !this.validCountry
+    },
+    showCapitalList() {
+      return this.capital?.trim() && this.capitalListComputed.length && !this.validCapital
+    },
     validCountry() {
       return this.answer.country.includes(this.sanitize(this.country))
     },
@@ -173,6 +223,10 @@ export default {
     const r = await ky.get(import.meta.env.PROD ? '/api' : 'http://localhost:7059/api')
     const json = await r.text()
     const response = await browserPassworder.decrypt(r.headers.get('X-Flag-Date'), json) // just to avoid really easy cheating
+
+
+    this.countryList = await ky.get(import.meta.env.PROD ? '/countries' : 'http://localhost:7059/countries').json()
+    this.capitalList = await ky.get(import.meta.env.PROD ? '/capitals' : 'http://localhost:7059/capitals').json()
 
     this.answer = {
       country: response.country.map(this.sanitize),
