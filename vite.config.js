@@ -1,21 +1,23 @@
-import {fileURLToPath, URL} from 'url'
-import {defineConfig} from 'vite'
+import { fileURLToPath, URL } from 'url'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import ViteFonts from 'vite-plugin-fonts'
+import Unfonts from 'unplugin-fonts/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), ViteFonts({
-    google: {
-      families: [{
-        name: 'Fugaz One', styles: 'ital,wght@0,400;1,200', defer: true
-      }]
-    }
-  })],
+  plugins: [vue(),
+    Unfonts({
+      google: {
+        families: [
+          { name: 'Fugaz One', styles: 'ital,wght@0,400;1,200', defer: true },
+          'Raleway'
+        ]
+      }
+    })],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'crypto': 'crypto-browserify'
+      crypto: 'crypto-browserify'
     }
   },
   optimizeDeps: {
@@ -27,4 +29,3 @@ export default defineConfig({
     }
   }
 })
-

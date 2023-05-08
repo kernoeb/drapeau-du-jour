@@ -12,36 +12,37 @@
   },
   "dependencies": {
     "@nozomuikuta/h3-cors": "^0.2.0",
-    "@peculiar/webcrypto": "^1.4.1",
+    "@peculiar/webcrypto": "^1.4.3",
     "browser-passworder": "^2.0.3",
     "compression": "^1.7.4",
-    "dayjs": "^1.11.6",
-    "defu": "^6.1.1",
-    "h3": "^1.0.1",
+    "dayjs": "^1.11.7",
+    "defu": "^6.1.2",
+    "h3": "^1.6.5",
     "serve-static": "^1.15.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^3.2.0",
-    "autoprefixer": "^10.4.13",
+    "@vitejs/plugin-vue": "^4.2.1",
+    "autoprefixer": "^10.4.14",
     "crypto-browserify": "^3.12.0",
-    "ky": "^0.32.2",
-    "normalize-diacritics": "^3.0.12",
-    "particles.vue3": "^2.5.3",
-    "postcss": "^8.4.19",
-    "tailwind-scrollbar": "^2.0.1",
-    "tailwindcss": "^3.2.4",
-    "tsparticles": "^2.5.3",
-    "vite": "^3.2.4",
+    "eslint-config-standard": "^17.0.0",
+    "ky": "^0.33.3",
+    "normalize-diacritics": "^4.0.0",
+    "particles.vue3": "^2.9.3",
+    "postcss": "^8.4.23",
+    "tailwind-scrollbar": "^3.0.0",
+    "tailwindcss": "^3.3.2",
+    "tsparticles": "^2.9.3",
+    "unplugin-fonts": "^1.0.3",
+    "vite": "^4.3.5",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-fonts": "^0.6.0",
-    "vue": "^3.2.45"
+    "vue": "^3.2.47"
   },
   "optionalDependencies": {
-    "eslint": "^8.28.0",
-    "eslint-plugin-vue": "^9.7.0",
-    "nodemon": "^2.0.20"
+    "eslint": "^8.40.0",
+    "eslint-plugin-vue": "^9.11.1",
+    "nodemon": "^2.0.22"
   },
   "engines": {
-    "node": "v16"
+    "node": "18"
   }
 }

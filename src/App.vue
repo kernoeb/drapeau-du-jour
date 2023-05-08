@@ -115,7 +115,7 @@
           Bravo !
           <span class="emoji">😄</span>
         </p>
-        <p>
+        <p class="mt-3">
           <GoogleMapsLink
             v-if="answer?.rawCountry"
             :raw-country="answer.rawCountry[0]"
@@ -123,6 +123,12 @@
         </p>
         <p>
           <GeobtenuLink
+            v-if="answer?.flag"
+            :flag="answer.flag"
+          />
+        </p>
+        <p>
+          <FlagpediaLink
             v-if="answer?.flag"
             :flag="answer.flag"
           />
@@ -140,7 +146,7 @@
           <div>Le pays était <span class="font-bold">{{ answer.rawCountry[0] }}</span></div>
           <div>La capitale était <span class="font-bold">{{ answer.rawCapital.join(', ') }}</span></div>
         </div>
-        <p>
+        <p class="mt-3">
           <GoogleMapsLink
             v-if="answer?.rawCountry"
             :raw-country="answer.rawCountry[0]"
@@ -152,16 +158,23 @@
             :flag="answer.flag"
           />
         </p>
+        <p>
+          <FlagpediaLink
+            v-if="answer?.flag"
+            :flag="answer.flag"
+          />
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {normalizeSync} from 'normalize-diacritics'
+import { normalizeSync } from 'normalize-diacritics'
 import WinParticles from './components/WinParticles.vue'
 import GeobtenuLink from '@/components/GeobtenuLink.vue'
 import GoogleMapsLink from '@/components/GoogleMapsLink.vue'
+import FlagpediaLink from '@/components/FlagpediaLink.vue'
 import browserPassworder from 'browser-passworder'
 import ky from 'ky'
 
@@ -169,42 +182,70 @@ export default {
   components: {
     GeobtenuLink,
     GoogleMapsLink,
-    WinParticles
+    WinParticles,
+    FlagpediaLink
   },
-  data() {
+  data () {
     return {
       answer: {},
       country: '',
       capital: '',
       giveup: false,
       countryList: [],
-      capitalList: []
+      capitalList: [],
+      normalizeCache: {}
     }
   },
   computed: {
-    countryListComputed() {
-      return this.countryList.filter(v => v && this.country && v.toLowerCase().includes(this.country.trim().toLowerCase()))
+    normalizedCountry () {
+      return this.sanitize(this.country)
     },
-    capitalListComputed() {
-      return this.capitalList.filter(v => v && this.capital && v.toLowerCase().includes(this.capital.trim().toLowerCase()))
+    countryListComputed () {
+      return this.countryList.filter(v => {
+        if (!v) return false
+
+        let normalized = this.normalizeCache[v]
+        if (!normalized) {
+          normalized = normalizeSync(v)
+          this.normalizeCache[v] = normalized
+        }
+
+        return normalized && normalized.toLowerCase().includes(this.normalizedCountry.toLowerCase())
+      })
     },
-    showCountryList() {
+    normalizedCapital () {
+      return this.sanitize(this.capital)
+    },
+    capitalListComputed () {
+      return this.capitalList.filter(v => {
+        if (!v) return false
+
+        let normalized = this.normalizeCache[v]
+        if (!normalized) {
+          normalized = normalizeSync(v)
+          this.normalizeCache[v] = normalized
+        }
+
+        return normalized && normalized.toLowerCase().includes(this.normalizedCapital.toLowerCase())
+      })
+    },
+    showCountryList () {
       return this.country?.trim() && this.countryListComputed.length && !this.validCountry
     },
-    showCapitalList() {
+    showCapitalList () {
       return this.capital?.trim() && this.capitalListComputed.length && !this.validCapital
     },
-    validCountry() {
+    validCountry () {
       return this.answer.country.includes(this.sanitize(this.country))
     },
-    validCapital() {
+    validCapital () {
       return this.answer.capital.includes(this.sanitize(this.capital))
     },
-    isValid() {
-      return this.answer.country.includes(this.sanitize(this.country))
-        && this.answer.capital.includes(this.sanitize(this.capital))
+    isValid () {
+      return this.answer.country.includes(this.sanitize(this.country)) &&
+        this.answer.capital.includes(this.sanitize(this.capital))
     },
-    numberOfValidAnswers() {
+    numberOfValidAnswers () {
       let count = 0
       if (this.answer.country.includes(this.sanitize(this.country))) count++
       if (this.answer.capital.includes(this.sanitize(this.capital))) count++
@@ -212,18 +253,17 @@ export default {
     }
   },
   watch: {
-    country() {
+    country () {
       this.updateLocalStorage()
     },
-    capital() {
+    capital () {
       this.updateLocalStorage()
     }
   },
-  async created() {
+  async created () {
     const r = await ky.get(import.meta.env.PROD ? '/api' : 'http://localhost:7059/api')
     const json = await r.text()
     const response = await browserPassworder.decrypt(r.headers.get('X-Flag-Date'), json) // just to avoid really easy cheating
-
 
     this.countryList = await ky.get(import.meta.env.PROD ? '/countries' : 'http://localhost:7059/countries').json()
     this.capitalList = await ky.get(import.meta.env.PROD ? '/capitals' : 'http://localhost:7059/capitals').json()
@@ -257,20 +297,20 @@ export default {
       }
     })
   },
-  mounted() {
+  mounted () {
     console.clear()
     console.log('%cTricheur', 'color: #FF0061; font-size: 10em; font-weight: bold;')
     console.log('%cPlus compliqué maintenant', 'color: #FF0061; font-size: 2em; font-weight: bold;')
   },
   methods: {
-    updateLocalStorage() {
+    updateLocalStorage () {
       localStorage.setItem('saved', JSON.stringify({
         country: this.country || '',
         capital: this.capital || '',
         date: this.answer?.date || ''
       }))
     },
-    closeKeyboard() {
+    closeKeyboard () {
       try {
         this.$refs.country.blur()
       } catch (e) {
@@ -282,7 +322,7 @@ export default {
         console.log(e)
       }
     },
-    sanitize(str) {
+    sanitize (str) {
       if (!str) return ''
       return normalizeSync(str).replace(/[-‘’']/g, ' ').replace(/[.*?!]/g, '').toUpperCase().trim()
     }

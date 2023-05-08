@@ -2,10 +2,10 @@
   <a
     :href="`https://www.google.com/maps/search/?api=1&query=Pays%20${encodeURIComponent(rawCountry)}`"
     target="_blank"
-    class="text-gray-200"
+    class="text-gray-200 font-bold"
     rel="noopener noreferrer"
   >
-    - Voir sur Google Maps
+    ➡️&nbsp;&nbsp;Voir sur Google Maps
   </a>
 </template>
 

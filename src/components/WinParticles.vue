@@ -11,115 +11,115 @@ import { loadFull } from 'tsparticles'
 
 export default {
   name: 'WinParticles',
-  data() {
+  data () {
     return {
       particlesInit: async (engine) => {
         await loadFull(engine)
       },
       particlesOptions: {
-        'emitters': {
-          'position': {
-            'x': 50,
-            'y': 100
+        emitters: {
+          position: {
+            x: 50,
+            y: 100
           },
-          'rate': {
-            'quantity': 5,
-            'delay': 0.15
+          rate: {
+            quantity: 5,
+            delay: 0.15
           }
         },
-        'particles': {
-          'color': {
-            'value': [
+        particles: {
+          color: {
+            value: [
               '#1E00FF',
               '#FF0061',
               '#E1FF00',
               '#00FF9E'
             ]
           },
-          'move': {
-            'decay': 0.05,
-            'direction': 'top',
-            'enable': true,
-            'gravity': {
-              'enable': true
+          move: {
+            decay: 0.05,
+            direction: 'top',
+            enable: true,
+            gravity: {
+              enable: true
             },
-            'outModes': {
-              'top': 'none',
-              'default': 'destroy'
+            outModes: {
+              top: 'none',
+              default: 'destroy'
             },
-            'speed': {
-              'min': 75,
-              'max': 150
+            speed: {
+              min: 75,
+              max: 150
             }
           },
-          'number': {
-            'value': 0
+          number: {
+            value: 0
           },
-          'opacity': {
-            'value': 1
+          opacity: {
+            value: 1
           },
-          'rotate': {
-            'value': {
-              'min': 0,
-              'max': 360
+          rotate: {
+            value: {
+              min: 0,
+              max: 360
             },
-            'direction': 'random',
-            'animation': {
-              'enable': true,
-              'speed': 30
+            direction: 'random',
+            animation: {
+              enable: true,
+              speed: 30
             }
           },
-          'tilt': {
-            'direction': 'random',
-            'enable': true,
-            'value': {
-              'min': 0,
-              'max': 360
+          tilt: {
+            direction: 'random',
+            enable: true,
+            value: {
+              min: 0,
+              max: 360
             },
-            'animation': {
-              'enable': true,
-              'speed': 30
+            animation: {
+              enable: true,
+              speed: 30
             }
           },
-          'size': {
-            'value': 3,
-            'animation': {
-              'enable': true,
-              'startValue': 'min',
-              'count': 1,
-              'speed': 16,
-              'sync': true
+          size: {
+            value: 3,
+            animation: {
+              enable: true,
+              startValue: 'min',
+              count: 1,
+              speed: 16,
+              sync: true
             }
           },
-          'roll': {
-            'darken': {
-              'enable': true,
-              'value': 25
+          roll: {
+            darken: {
+              enable: true,
+              value: 25
             },
-            'enlighten': {
-              'enable': true,
-              'value': 25
+            enlighten: {
+              enable: true,
+              value: 25
             },
-            'enable': true,
-            'speed': {
-              'min': 5,
-              'max': 15
+            enable: true,
+            speed: {
+              min: 5,
+              max: 15
             }
           },
-          'wobble': {
-            'distance': 30,
-            'enable': true,
-            'speed': {
-              'min': -7,
-              'max': 7
+          wobble: {
+            distance: 30,
+            enable: true,
+            speed: {
+              min: -7,
+              max: 7
             }
           },
-          'shape': {
-            'type': [
+          shape: {
+            type: [
               'circle',
               'square'
             ],
-            'options': {}
+            options: {}
           }
         }
       }

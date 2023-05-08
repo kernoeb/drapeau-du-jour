@@ -1,12 +1,12 @@
-const {createServer} = require('http')
-const {createApp, toNodeListener, fromNodeMiddleware, eventHandler} = require('h3')
+const { createServer } = require('http')
+const { createApp, toNodeListener, fromNodeMiddleware, eventHandler } = require('h3')
 const fs = require('fs')
 const path = require('path')
-const {defineCorsEventHandler} = require('@nozomuikuta/h3-cors')
+const { defineCorsEventHandler } = require('@nozomuikuta/h3-cors')
 const serveStatic = require('serve-static')
 const dayjs = require('dayjs')
 const compression = require('compression')
-const {Crypto} = require('@peculiar/webcrypto')
+const { Crypto } = require('@peculiar/webcrypto')
 global.crypto = new Crypto()
 
 const passworder = require('browser-passworder')
@@ -48,6 +48,5 @@ app.use('/api', fromNodeMiddleware((req, res) => {
 
 app.use('/countries', eventHandler(() => countryNames))
 app.use('/capitals', eventHandler(() => capitals))
-
 
 createServer(toNodeListener(app)).listen(process.env.PORT || 3000)

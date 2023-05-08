@@ -5,11 +5,13 @@
     class="text-gray-200 font-bold"
     rel="noopener noreferrer"
   >
-    ➡️&nbsp;&nbsp;Géobtenu
+    ➡️&nbsp;&nbsp;Flagpedia.net
   </a>
 </template>
 
 <script>
+import flagpedia from '@/assets/flagpedia.json'
+
 export default {
   name: 'GeobtenuLink',
   props: {
@@ -20,7 +22,7 @@ export default {
   },
   computed: {
     href () {
-      return `https://geobtenu.netlify.app/flag/${encodeURIComponent(this.flag)}`
+      return flagpedia[this.flag] || 'https://flagpedia.net'
     }
   }
 }

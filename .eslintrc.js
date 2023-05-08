@@ -8,14 +8,8 @@ module.exports = {
     withDefaults: 'readonly'
   },
   extends: [
+    'standard',
     'eslint:recommended',
     'plugin:vue/vue3-recommended'
-  ],
-  rules: {
-    'no-trailing-spaces': 'error',
-    'semi': ['error', 'never'],
-    indent: ['error', 2],
-    'comma-dangle': 'error',
-    quotes: ['error', 'single']
-  }
+  ]
 }
