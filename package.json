@@ -11,7 +11,6 @@
     "server": "node server/app.js"
   },
   "dependencies": {
-    "@nozomuikuta/h3-cors": "^0.2.0",
     "@peculiar/webcrypto": "^1.4.3",
     "browser-passworder": "^2.0.3",
     "compression": "^1.7.4",

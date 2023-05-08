@@ -1,9 +1,6 @@
 lockfileVersion: '6.0'
 
 dependencies:
-  '@nozomuikuta/h3-cors':
-    specifier: ^0.2.0
-    version: 0.2.0(defu@6.1.2)(h3@1.6.5)
   '@peculiar/webcrypto':
     specifier: ^1.4.3
     version: 1.4.3
@@ -417,16 +414,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
-
-  /@nozomuikuta/h3-cors@0.2.0(defu@6.1.2)(h3@1.6.5):
-    resolution: {integrity: sha512-E2AwCG0cWPEipUVtXeZSuvTLoXRX5V0GFW45jqGTXdmb64JJXEY8KfAM+prP8r9WvS0bK6p6FymzWrmdDqvqCA==}
-    peerDependencies:
-      defu: ^6.1.0
-      h3: ^1.0.1
-    dependencies:
-      defu: 6.1.2
-      h3: 1.6.5
-    dev: false
 
   /@peculiar/asn1-schema@2.3.6:
     resolution: {integrity: sha512-izNRxPoaeJeg/AyH8hER6s+H7p4itk+03QCa4sbxI3lNdseQYCuxzgsuNK8bTXChtLTjpJz6NmXKA73qLa3rCA==}

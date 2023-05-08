@@ -27,5 +27,10 @@ export default defineConfig({
         global: 'globalThis'
       }
     }
+  },
+  server: {
+    proxy: {
+      '/': 'http://localhost:7059'
+    }
   }
 })

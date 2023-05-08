@@ -261,12 +261,12 @@ export default {
     }
   },
   async created () {
-    const r = await ky.get(import.meta.env.PROD ? '/api' : 'http://localhost:7059/api')
+    const r = await ky.get('/api')
     const json = await r.text()
     const response = await browserPassworder.decrypt(r.headers.get('X-Flag-Date'), json) // just to avoid really easy cheating
 
-    this.countryList = await ky.get(import.meta.env.PROD ? '/countries' : 'http://localhost:7059/countries').json()
-    this.capitalList = await ky.get(import.meta.env.PROD ? '/capitals' : 'http://localhost:7059/capitals').json()
+    this.countryList = await ky.get('/countries').json()
+    this.capitalList = await ky.get('/capitals').json()
 
     this.answer = {
       country: response.country.map(this.sanitize),

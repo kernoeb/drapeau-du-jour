@@ -2,7 +2,6 @@ const { createServer } = require('http')
 const { createApp, toNodeListener, fromNodeMiddleware, eventHandler } = require('h3')
 const fs = require('fs')
 const path = require('path')
-const { defineCorsEventHandler } = require('@nozomuikuta/h3-cors')
 const serveStatic = require('serve-static')
 const dayjs = require('dayjs')
 const compression = require('compression')
@@ -26,9 +25,7 @@ const countryNames = Object.keys(countries).map((key) => countries[key].country)
 const capitals = Object.keys(countries).map((key) => countries[key].capital).flat().sort((a, b) => a.localeCompare(b))
 
 const app = createApp()
-app.use(defineCorsEventHandler({
-  exposeHeaders: ['X-Flag-Date']
-}))
+
 app.use(fromNodeMiddleware(compression()))
 
 const s = path.join(process.cwd(), '/dist/')
