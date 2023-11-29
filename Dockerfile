@@ -48,6 +48,7 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV HOST 0.0.0.0
 
+COPY --chown=node:node package.json package-lock.json ./
 COPY --chown=node:node server/ ./server/
 COPY --chown=node:node ./resources/ ./resources/
 COPY --chown=node:node --from=build /home/node/build/node_modules/ ./node_modules/
