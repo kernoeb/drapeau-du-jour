@@ -1,14 +1,12 @@
-const { createServer } = require('http')
-const { createApp, toNodeListener, fromNodeMiddleware, eventHandler } = require('h3')
-const fs = require('fs')
-const path = require('path')
-const serveStatic = require('serve-static')
-const dayjs = require('dayjs')
-const compression = require('compression')
-const { Crypto } = require('@peculiar/webcrypto')
-global.crypto = new Crypto()
+import { createServer } from 'http'
+import { createApp, eventHandler, fromNodeMiddleware, toNodeListener } from 'h3'
+import fs from 'fs'
+import path from 'path'
+import serveStatic from 'serve-static'
+import dayjs from 'dayjs'
+import compression from 'compression'
 
-const passworder = require('browser-passworder')
+import passworder from 'browser-passworder'
 
 const dailyJson = process.env.NODE_ENV === 'production' ? 'daily.json' : './dev/daily.json'
 if (!fs.existsSync(dailyJson)) {

@@ -25,3 +25,5 @@ dist-ssr
 /dev/
 
 slim.report.json
+
+daily.json

@@ -5,7 +5,8 @@ import Unfonts from 'unplugin-fonts/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(),
+  plugins: [
+    vue(),
     Unfonts({
       google: {
         families: [
@@ -30,7 +31,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/': 'http://localhost:7059'
+      '/api': 'http://localhost:7059/api',
+      '/countries': 'http://localhost:7059/countries',
+      '/capitals': 'http://localhost:7059/capitals'
     }
   }
 })
