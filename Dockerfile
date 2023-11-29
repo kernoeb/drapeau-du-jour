@@ -3,7 +3,7 @@ LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk add --no-cache curl bash
 
-RUN npm install -g pnpm@8 clean-modules@2.0.6
+RUN npm install -g pnpm@8 clean-modules@3.0.4
 
 FROM build-tools as build
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
