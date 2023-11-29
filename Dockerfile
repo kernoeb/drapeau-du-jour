@@ -3,7 +3,7 @@ LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk add --no-cache curl bash
 
-RUN npm install -g pnpm@8 clean-modules@3.0.4
+RUN npm install -g clean-modules@3.0.4
 
 FROM build-tools as build
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
@@ -14,8 +14,8 @@ RUN chown -R node:node /home/node/build
 USER node
 
 # Only copy the files we need for the moment
-COPY --chown=node:node package.json pnpm-lock.yaml ./
-RUN pnpm install --no-optional
+COPY --chown=node:node package.json package-lock.json ./
+RUN npm install
 
 # Copy all files, and build the app
 COPY --chown=node:node src/ ./src/
@@ -25,12 +25,13 @@ COPY --chown=node:node tailwind.config.js ./tailwind.config.js
 COPY --chown=node:node postcss.config.js ./postcss.config.js
 COPY --chown=node:node index.html ./index.html
 
-RUN pnpm run build
+RUN npm run build
+
 RUN rm -rf node_modules
 
 ENV NODE_ENV production
-RUN pnpm install --prod --no-optional
 
+RUN npm install --omit=dev
 RUN clean-modules --yes
 
 FROM node:20.10.0-alpine3.18 as server
