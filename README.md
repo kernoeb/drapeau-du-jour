@@ -1,6 +1,15 @@
-# Drapeau du jour
+<h1 align="center">
+  <br>
+  <a href="https://drapeaudujour.noewen.com/"><img src="https://raw.githubusercontent.com/kernoeb/drapeau-du-jour/main/public/favicon.png" alt="PlanningSup" width="80"></a>
+  <br>
+  Drapeau du jour
+  <br>
+</h1>
+ 
+![capture](public/capture.png)
 
 > Vue 3 + Vite + Node.js
+
 
 ### Before you start
 
