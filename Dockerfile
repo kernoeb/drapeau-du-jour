@@ -14,7 +14,7 @@ RUN chown -R node:node /home/node/build
 USER node
 
 # Only copy the files we need for the moment
-COPY --chown=node:node package.json pnpm-lock.yaml .npmrc ./
+COPY --chown=node:node package.json pnpm-lock.yaml ./
 RUN pnpm install --no-optional
 
 # Copy all files, and build the app
