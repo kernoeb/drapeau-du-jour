@@ -1,21 +1,15 @@
 <template>
-  <Particles
+  <vue-particles
     id="particles"
-    :particles-init="particlesInit"
     :options="particlesOptions"
   />
 </template>
 
 <script>
-import { loadFull } from 'tsparticles'
-
 export default {
   name: 'WinParticles',
   data () {
     return {
-      particlesInit: async (engine) => {
-        await loadFull(engine)
-      },
       particlesOptions: {
         emitters: {
           position: {

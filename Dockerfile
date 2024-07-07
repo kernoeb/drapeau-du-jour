@@ -1,9 +1,9 @@
-FROM node:20.10.0-alpine3.18 as build-tools
+FROM node:20.15.0-alpine3.20 as build-tools
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk add --no-cache curl bash
 
-RUN npm install -g clean-modules@3.0.4
+RUN npm install -g clean-modules@3.0.5
 
 FROM build-tools as build
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
