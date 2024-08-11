@@ -1,4 +1,4 @@
-FROM node:20.15.0-alpine3.20 as build-tools
+FROM node:20.16.0-alpine3.20 as build-tools
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
 RUN apk add --no-cache curl bash
