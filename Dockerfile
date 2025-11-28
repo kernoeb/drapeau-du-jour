@@ -15,7 +15,7 @@ USER node
 
 # Only copy the files we need for the moment
 COPY --chown=node:node package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # Copy all files, and build the app
 COPY --chown=node:node src/ ./src/
@@ -31,7 +31,7 @@ RUN rm -rf node_modules
 
 ENV NODE_ENV=production
 
-RUN npm install --omit=dev
+RUN npm ci --omit=dev
 RUN clean-modules --yes
 
 FROM node:20.10.0-alpine3.18 AS server
