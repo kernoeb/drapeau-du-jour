@@ -2,8 +2,8 @@ version: '3'
 
 services:
   web:
-    image: ghcr.io/kernoeb/drapeau-du-jour:main
-    # build: .
+    #image: ghcr.io/kernoeb/drapeau-du-jour:main
+    build: .
     restart: always
     stdin_open: true
     tty: true

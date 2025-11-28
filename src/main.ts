@@ -6,8 +6,8 @@ import './index.css'
 
 createApp(App)
   .use(Particles, {
-    init: async engine => {
-      await loadFull(engine) // or you can load the slim version from "@tsparticles/slim" if don't need Shapes or Animations
-    }
+    init: async (engine: unknown) => {
+      await loadFull(engine as Parameters<typeof loadFull>[0])
+    },
   })
   .mount('#app')

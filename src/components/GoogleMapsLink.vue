@@ -1,22 +1,17 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps<{
+  rawCountry: string
+}>()
+
+const href = computed(() => {
+  return `https://www.google.com/maps/search/?api=1&query=Pays%20${encodeURIComponent(props.rawCountry)}`
+})
+</script>
+
 <template>
-  <a
-    :href="`https://www.google.com/maps/search/?api=1&query=Pays%20${encodeURIComponent(rawCountry)}`"
-    target="_blank"
-    class="text-gray-200 font-bold"
-    rel="noopener noreferrer"
-  >
+  <a :href="href" target="_blank" class="link link-hover font-bold" rel="noopener noreferrer">
     ➡️&nbsp;&nbsp;Voir sur Google Maps
   </a>
 </template>
-
-<script>
-export default {
-  name: 'GoogleMapsLink',
-  props: {
-    rawCountry: {
-      type: String,
-      required: true
-    }
-  }
-}
-</script>

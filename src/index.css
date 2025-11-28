@@ -1,12 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
 
-html, body {
-  font-family: 'Raleway', sans-serif;
+html,
+body {
+  font-family: "Raleway", sans-serif;
 }
 
 #app {
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
+.bg-text {
+  background-size: 200%;
+  background-position: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-repeat: no-repeat;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  /* Dark outline for readability on any flag color */
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.4);
+  /* Paint order ensures stroke is behind the fill */
+  paint-order: stroke fill;
+}
