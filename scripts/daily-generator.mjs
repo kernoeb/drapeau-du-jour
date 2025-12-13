@@ -9,7 +9,7 @@ const today = dayjs()
 
 const dailyJson = {}
 
-for (let i = 0; i < 365 * 2; i++) {
+for (let i = 0; i < 365 * 3; i++) {
   const d = today.add(i, 'day')
   dailyJson[d.format('YYYY-MM-DD')] = countryIds[Math.floor(Math.random() * countryIds.length)]
 }
