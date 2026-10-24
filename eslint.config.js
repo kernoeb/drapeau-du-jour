@@ -1,7 +1,4 @@
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import antfu from '@antfu/eslint-config'
-
 
 export default antfu(
   {
@@ -14,7 +11,6 @@ export default antfu(
         registeredComponentsOnly: true,
         // ignore Vuetify components for future rule
         ignores: ['/^v-/', '/^V[A-Z]/'],
-        globals,
       }],
       'no-console': 'off',
       'antfu/if-newline': 'off',

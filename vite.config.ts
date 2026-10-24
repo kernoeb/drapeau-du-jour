@@ -23,10 +23,17 @@ export default defineConfig({
       'crypto': 'crypto-browserify',
     },
   },
+  // browser-passworder reads `global.crypto`, which browsers do not define.
+  // `define` covers the build, the optimizer option covers dev.
+  define: {
+    global: 'globalThis',
+  },
   optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
+    rolldownOptions: {
+      transform: {
+        define: {
+          global: 'globalThis',
+        },
       },
     },
   },

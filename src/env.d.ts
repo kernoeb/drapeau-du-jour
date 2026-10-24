@@ -6,11 +6,6 @@ declare module '*.vue' {
   export default component
 }
 
-declare module 'browser-passworder' {
-  export function encrypt(password: string, data: unknown): Promise<string>
-  export function decrypt<T = unknown>(password: string, data: string): Promise<T>
-}
-
 declare module '@tsparticles/vue3' {
   import type { Plugin } from 'vue'
   const Particles: Plugin
