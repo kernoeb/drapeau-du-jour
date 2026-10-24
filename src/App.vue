@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { StorageSerializers, useLocalStorage, useDebounceFn } from '@vueuse/core'
+import { ref, computed, watch, onMounted, reactive } from 'vue'
+import { StorageSerializers, useLocalStorage, useDebounceFn, usePreferredReducedMotion } from '@vueuse/core'
 import { normalizeSync } from 'normalize-diacritics'
 import browserPassworder from 'browser-passworder'
 import ky from 'ky'
@@ -8,6 +8,7 @@ import WinParticles from './components/WinParticles.vue'
 import GeobtenuLink from '@/components/GeobtenuLink.vue'
 import GoogleMapsLink from '@/components/GoogleMapsLink.vue'
 import FlagpediaLink from '@/components/FlagpediaLink.vue'
+import { useCombobox } from '@/composables/useCombobox'
 
 interface Answer {
   country: string[]
@@ -94,11 +95,14 @@ const showCapitalList = computed(() => {
 
 const isValid = computed(() => validCountry.value && validCapital.value)
 
-const numberOfValidAnswers = computed(() => {
-  let count = 0
-  if (validCountry.value) count++
-  if (validCapital.value) count++
-  return count
+const reducedMotion = usePreferredReducedMotion()
+
+const statusMessage = computed(() => {
+  if (isValid.value) return 'Bravo, les deux réponses sont correctes !'
+  if (giveup.value && answer.value) return `Dommage. Le pays était ${answer.value.rawCountry[0]}, la capitale était ${answer.value.rawCapital.join(', ')}.`
+  if (validCountry.value) return 'Le pays est correct.'
+  if (validCapital.value) return 'La capitale est correcte.'
+  return ''
 })
 
 const updateLocalStorage = useDebounceFn(() => {
@@ -124,13 +128,8 @@ function closeKeyboard() {
   capitalInput.value?.blur()
 }
 
-function selectCountry(value: string) {
-  country.value = value
-}
-
-function selectCapital(value: string) {
-  capital.value = value
-}
+const countryBox = reactive(useCombobox('country', country, countryListComputed, computed(() => !!showCountryList.value)))
+const capitalBox = reactive(useCombobox('capital', capital, capitalListComputed, computed(() => !!showCapitalList.value)))
 
 onMounted(async () => {
   console.clear()
@@ -165,27 +164,40 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex min-h-screen justify-center bg-base-200 px-4 py-12">
+  <main class="flex min-h-screen justify-center bg-page px-4 py-12">
     <div v-if="answer" class="w-full flex flex-col items-center">
-      <WinParticles v-if="isValid" />
+      <WinParticles v-if="isValid && reducedMotion !== 'reduce'" />
 
       <!-- Header Card -->
-      <div class="card card-border bg-base-100 mb-4 shadow-md">
-        <div class="card-body items-center py-4 px-8">
-          <h1
-            class="text-5xl tracking-wide whitespace-nowrap"
-            style="font-family: 'Fugaz One', serif"
-          >
-            <span
-              :style="{
-                backgroundImage: `url('/flags/${answer.flag}.png')`,
-                backgroundSize: '200%',
-                backgroundPosition: 'center',
-              }"
-              class="bg-text"
-            >
-              Drapeau du jour
-            </span>
+      <div class="card bg-base-100 mb-4 w-full max-w-sm border border-line">
+        <div class="card-body px-5 py-4">
+          <h1>
+            <!-- SVG text fills the width exactly. A white halo sits behind a dark outline, so it reads on both themes -->
+            <svg viewBox="0 0 1000 150" role="img" aria-label="Drapeau du jour" class="block h-auto w-full overflow-visible">
+              <defs>
+                <pattern id="title-flag" patternUnits="userSpaceOnUse" width="1000" height="150">
+                  <image :href="`/flags/${answer.flag}.png`" width="1000" height="150" preserveAspectRatio="none" />
+                </pattern>
+              </defs>
+              <text
+                x="500"
+                y="112"
+                text-anchor="middle"
+                textLength="980"
+                lengthAdjust="spacingAndGlyphs"
+                class="title-text title-halo"
+                aria-hidden="true"
+              >Drapeau du jour</text>
+              <text
+                x="500"
+                y="112"
+                text-anchor="middle"
+                textLength="980"
+                lengthAdjust="spacingAndGlyphs"
+                class="title-text"
+                fill="url(#title-flag)"
+              >Drapeau du jour</text>
+            </svg>
           </h1>
         </div>
       </div>
@@ -203,21 +215,18 @@ onMounted(async () => {
       </div>
 
       <!-- Flag Display -->
-      <div class="mb-8 flex flex-col items-center gap-2 w-full max-w-sm px-4">
-        <figure class="overflow-hidden rounded-lg border-2 border-base-300 shadow-lg">
-          <img
-            v-if="answer.flag"
-            :src="`/flags/${answer.flag}.png`"
-            alt="flag"
-            class="h-40 select-none object-contain"
-            style="pointer-events: none"
-          />
-        </figure>
-        <div class="badge badge-lg badge-outline">{{ numberOfValidAnswers }} / 2</div>
+      <div class="mb-8 flex flex-col items-center gap-2 w-full max-w-sm">
+        <img
+          v-if="answer.flag"
+          :src="`/flags/${answer.flag}.png`"
+          alt="Drapeau à deviner"
+          class="block h-48 w-auto max-w-full select-none rounded-box border border-line object-contain"
+          style="pointer-events: none"
+        />
       </div>
 
       <!-- Input Fields -->
-      <div class="mb-6 flex flex-col gap-4 w-full max-w-sm px-4">
+      <div class="mb-6 flex flex-col gap-4 w-full max-w-sm">
         <!-- Country Input -->
         <div class="dropdown dropdown-end w-full">
           <label class="floating-label w-full">
@@ -227,21 +236,38 @@ onMounted(async () => {
               type="text"
               placeholder="Nom du pays"
               autocomplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              :aria-expanded="countryBox.open"
+              :aria-controls="countryBox.listId"
+              :aria-activedescendant="countryBox.activeId"
+              @keydown="countryBox.onKeydown"
               autofocus
               class="input input-lg w-full"
               :class="{
-                'input-error': country && !validCountry,
                 'input-success': validCountry,
               }"
             />
             <span>Nom du pays</span>
+            <svg v-if="validCountry" class="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-success-strong" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7" /></svg>
           </label>
           <ul
-            v-if="showCountryList"
-            class="menu dropdown-content z-50 mt-1 max-h-60 w-full flex-nowrap overflow-y-auto rounded-box border border-base-300 bg-base-100 p-2 shadow-xl"
+            v-if="countryBox.open"
+            :id="countryBox.listId"
+            role="listbox"
+            aria-label="Suggestions de pays"
+            class="menu dropdown-content z-50 mt-1 max-h-60 w-full flex-nowrap overflow-y-auto rounded-box bg-base-100 p-2 border border-line"
           >
-            <li v-for="(value, index) in countryListComputed" :key="`country_${value}${index}`">
-              <button type="button" @click="selectCountry(value)">{{ value }}</button>
+            <li
+              v-for="(value, index) in countryListComputed"
+              :id="countryBox.optionId(index)"
+              :key="`country_${value}${index}`"
+              role="option"
+              :aria-selected="index === countryBox.active"
+              @mousedown.prevent
+              @click="countryBox.select(value)"
+            >
+              <span :class="{ 'menu-active': index === countryBox.active }">{{ value }}</span>
             </li>
           </ul>
         </div>
@@ -255,63 +281,63 @@ onMounted(async () => {
               type="text"
               placeholder="Capitale du pays"
               autocomplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              :aria-expanded="capitalBox.open"
+              :aria-controls="capitalBox.listId"
+              :aria-activedescendant="capitalBox.activeId"
+              @keydown="capitalBox.onKeydown"
               class="input input-lg w-full"
               :class="{
-                'input-error': capital && !validCapital,
                 'input-success': validCapital,
               }"
             />
             <span>Capitale du pays</span>
+            <svg v-if="validCapital" class="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-success-strong" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7" /></svg>
           </label>
           <ul
-            v-if="showCapitalList"
-            class="menu dropdown-content z-50 mt-1 max-h-60 w-full flex-nowrap overflow-y-auto rounded-box border border-base-300 bg-base-100 p-2 shadow-xl"
+            v-if="capitalBox.open"
+            :id="capitalBox.listId"
+            role="listbox"
+            aria-label="Suggestions de capitales"
+            class="menu dropdown-content z-50 mt-1 max-h-60 w-full flex-nowrap overflow-y-auto rounded-box bg-base-100 p-2 border border-line"
           >
-            <li v-for="(value, index) in capitalListComputed" :key="`capital_${value}${index}`">
-              <button type="button" @click="selectCapital(value)">{{ value }}</button>
+            <li
+              v-for="(value, index) in capitalListComputed"
+              :id="capitalBox.optionId(index)"
+              :key="`capital_${value}${index}`"
+              role="option"
+              :aria-selected="index === capitalBox.active"
+              @mousedown.prevent
+              @click="capitalBox.select(value)"
+            >
+              <span :class="{ 'menu-active': index === capitalBox.active }">{{ value }}</span>
             </li>
           </ul>
         </div>
       </div>
 
       <!-- Give Up Button -->
-      <div class="flex justify-center w-full max-w-sm px-4">
+      <div class="flex justify-center w-full max-w-sm">
         <button
           v-if="!isValid && !giveup"
-          class="btn btn-warning btn-wide"
+          class="btn btn-ghost btn-sm font-medium text-base-content/75 underline underline-offset-4 hover:bg-base-300"
           @click="giveup = true"
         >
           Abandonner
         </button>
       </div>
 
-      <!-- Success Alert -->
-      <div v-if="isValid" class="alert alert-success mt-4 shadow-lg w-full max-w-sm px-4">
-        <div>
-          <span class="text-lg font-bold">Bravo ! 😄</span>
-        </div>
-        <div class="mt-3 flex flex-col gap-1">
-          <GoogleMapsLink v-if="answer?.rawCountry" :raw-country="answer.rawCountry[0]" />
-          <GeobtenuLink v-if="answer?.flag" :flag="answer.flag" />
-          <FlagpediaLink v-if="answer?.flag" :flag="answer.flag" />
-        </div>
-      </div>
+      <p class="sr-only" aria-live="polite">{{ statusMessage }}</p>
 
-      <!-- Give Up Alert -->
-      <div v-if="!isValid && giveup" class="alert alert-warning mt-4 shadow-lg w-full max-w-sm px-4">
-        <div>
-          <span class="text-lg font-bold">Dommage 😔</span>
-          <div class="mt-2 space-y-1">
-            <p>
-              Le pays était <span class="font-bold">{{ answer.rawCountry[0] }}</span>
-            </p>
-            <p>
-              La capitale était
-              <span class="font-bold">{{ answer.rawCapital.join(', ') }}</span>
-            </p>
-          </div>
+      <!-- Result -->
+      <div v-if="isValid || giveup" class="mt-4 flex w-full max-w-sm flex-col gap-4 rounded-box border border-line bg-base-100 p-5 pt-4">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm leading-none font-semibold text-base-content/75">{{ isValid ? 'Bien joué' : 'Dommage, c\'était' }}</span>
+          <span class="text-3xl leading-tight" style="font-family: 'Fugaz One', serif">{{ answer.rawCountry[0] }}</span>
+          <span class="text-base-content/75">Capitale : <span class="font-semibold text-base-content">{{ answer.rawCapital.join(', ') }}</span></span>
         </div>
-        <div class="mt-3 flex flex-col gap-1">
+        <div class="flex gap-2">
           <GoogleMapsLink v-if="answer?.rawCountry" :raw-country="answer.rawCountry[0]" />
           <GeobtenuLink v-if="answer?.flag" :flag="answer.flag" />
           <FlagpediaLink v-if="answer?.flag" :flag="answer.flag" />
@@ -321,7 +347,7 @@ onMounted(async () => {
 
     <!-- Loading State -->
     <div v-else class="flex items-center justify-center">
-      <span class="loading loading-spinner loading-lg text-primary"></span>
+      <span class="loading loading-spinner loading-lg text-primary" aria-label="Chargement"></span>
     </div>
-  </div>
+  </main>
 </template>

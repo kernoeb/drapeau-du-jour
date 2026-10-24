@@ -12,7 +12,7 @@ export default defineConfig({
       google: {
         families: [
           { name: 'Fugaz One', styles: 'ital,wght@0,400;1,200', defer: true },
-          'Raleway',
+          { name: 'Raleway', styles: 'wght@400;500;600;700' },
         ],
       },
     }),
@@ -39,9 +39,9 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': 'http://localhost:7059/api',
-      '/countries': 'http://localhost:7059/countries',
-      '/capitals': 'http://localhost:7059/capitals',
+      '/api': 'http://localhost:7059',
+      '/countries': 'http://localhost:7059',
+      '/capitals': 'http://localhost:7059',
     },
   },
 })

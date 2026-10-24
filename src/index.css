@@ -1,27 +1,87 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Solid colours: a see-through border overlaps itself at rounded corners and looks blurred in Chrome */
+@theme {
+  --color-line: color-mix(in oklab, var(--color-base-content) 50%, var(--color-base-100));
+  --color-success-strong: color-mix(in oklab, var(--color-success) 55%, var(--color-base-content));
+  --color-page: var(--page);
+}
+
+/* In daisyUI's dark theme base-200 is almost base-100, so cards would vanish: go one step darker */
+:root {
+  --page: var(--color-base-200);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: color-mix(in oklab, var(--color-base-300) 70%, black);
+  }
+}
+
+/* No 3D edge on buttons and badges: it renders as a hard dark line in Chrome */
+:root {
+  --depth: 0;
+  /* One corner radius for boxes and fields alike */
+  --radius-field: var(--radius-box);
+  --radius-selector: var(--radius-box);
+}
+
 html,
 body {
   font-family: "Raleway", sans-serif;
+}
+
+/* Every size is in rem, so this scales the whole page by 110% on wide screens */
+@media (min-width: 768px) {
+  html {
+    font-size: 110%;
+  }
 }
 
 #app {
   font-family: "Raleway", sans-serif;
 }
 
-.bg-text {
-  background-size: 200%;
-  background-position: center;
-  -webkit-background-clip: text;
-  background-clip: text;
-  background-repeat: no-repeat;
-  -webkit-text-fill-color: transparent;
-  text-align: center;
-  font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-  /* Dark outline for readability on any flag color */
-  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.4);
-  /* Paint order ensures stroke is behind the fill */
+.title-text {
+  font-family: "Fugaz One", serif;
+  font-size: 118px;
+  /* Drawn under the flag fill, so white parts of a flag keep a dark edge */
+  stroke: #1f2026;
+  stroke-width: 16px;
+  stroke-linejoin: round;
   paint-order: stroke fill;
+}
+
+/* Invisible on the white card, it lifts the dark outline off the dark card */
+.title-halo {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 28px;
+}
+
+/* The floating label sits across the border: half page colour, half field colour, so no box shows */
+.floating-label > span {
+  background: linear-gradient(to bottom, var(--color-page) 50%, var(--color-base-100) 50%);
+}
+
+/* daisyUI's default border is too faint to see an empty field */
+.input:not(.input-success) {
+  border-color: var(--color-line);
+}
+
+/* daisyUI draws focus as an outline 2px outside the border, which looks doubled */
+.input:focus,
+.input:focus-within {
+  outline-offset: -1px;
+}
+
+.input:not(.input-success):focus {
+  outline-color: var(--color-primary);
+}
+
+/* daisyUI paints a pressed suggestion black: keep it in the hover's grey */
+.menu {
+  --menu-active-bg: color-mix(in oklab, var(--color-base-content) 15%, transparent);
+  --menu-active-fg: var(--color-base-content);
 }
