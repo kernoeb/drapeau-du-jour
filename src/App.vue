@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { useLocalStorage, useDebounceFn } from '@vueuse/core'
+import { StorageSerializers, useLocalStorage, useDebounceFn } from '@vueuse/core'
 import { normalizeSync } from 'normalize-diacritics'
 import browserPassworder from 'browser-passworder'
 import ky from 'ky'
@@ -42,7 +42,8 @@ const normalizeCache = ref<Record<string, string>>({})
 const countryInput = ref<HTMLInputElement | null>(null)
 const capitalInput = ref<HTMLInputElement | null>(null)
 
-const savedState = useLocalStorage<SavedState | null>('saved', null)
+// A null default makes VueUse store the object as "[object Object]"
+const savedState = useLocalStorage<SavedState | null>('saved', null, { serializer: StorageSerializers.object })
 
 function sanitize(str: string): string {
   if (!str) return ''
