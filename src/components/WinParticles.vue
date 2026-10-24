@@ -11,8 +11,13 @@ const particlesOptions = {
     },
   },
   particles: {
-    color: {
-      value: ['#1E00FF', '#FF0061', '#E1FF00', '#00FF9E'],
+    paint: {
+      fill: {
+        enable: true,
+        color: {
+          value: ['#1E00FF', '#FF0061', '#E1FF00', '#00FF9E'],
+        },
+      },
     },
     move: {
       decay: 0.05,
