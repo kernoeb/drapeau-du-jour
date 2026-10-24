@@ -101,5 +101,8 @@ const particlesOptions = {
 </script>
 
 <template>
-  <vue-particles id="particles" :options="particlesOptions" />
+  <!-- Fixed from the start: the canvas is in the page flow until tsparticles styles it -->
+  <div class="pointer-events-none fixed inset-0">
+    <vue-particles id="particles" :options="particlesOptions" />
+  </div>
 </template>
