@@ -27,3 +27,6 @@ dist-ssr
 slim.report.json
 
 daily.json
+
+/server/ddj
+/server/ddj.map

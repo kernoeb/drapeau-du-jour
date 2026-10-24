@@ -1,61 +1,38 @@
-FROM node:24.12.0-alpine3.22 AS build-tools
+FROM oven/bun:1.4.4-slim@sha256:1846adf22496bd711036aae8be147e57bdebbaea2e5264e3e0b5af1db187d9a4 AS build
 LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
 
-RUN apk add --no-cache curl bash
-
-RUN npm install -g clean-modules@3.0.5
-
-FROM build-tools AS build
-LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
-
-WORKDIR /home/node/build
-RUN chown -R node:node /home/node/build
-
-USER node
-
-# Only copy the files we need for the moment
-COPY --chown=node:node package.json package-lock.json ./
-RUN npm ci
-
-# Copy all files, and build the app
-COPY --chown=node:node src/ ./src/
-COPY --chown=node:node public/ ./public/
-COPY --chown=node:node vite.config.ts ./vite.config.ts
-COPY --chown=node:node tsconfig.json ./tsconfig.json
-COPY --chown=node:node tsconfig.node.json ./tsconfig.node.json
-COPY --chown=node:node index.html ./index.html
-
-RUN npm run build
-
-RUN rm -rf node_modules
-
-ENV NODE_ENV=production
-
-RUN npm ci --omit=dev
-RUN clean-modules --yes
-
-FROM node:20.10.0-alpine3.18 AS server
-LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
-
-RUN apk --no-cache add dumb-init curl bash
-
-# Remove some useless stuff
-RUN rm -rf /usr/local/lib/node_modules/npm/ /usr/local/bin/npm /opt/yarn-*
-
-USER node
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV HOST=0.0.0.0
+# Cache packages
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
-COPY --chown=node:node package.json package-lock.json ./
-COPY --chown=node:node server/ ./server/
-COPY --chown=node:node ./resources/ ./resources/
-COPY --chown=node:node --from=build /home/node/build/node_modules/ ./node_modules/
-COPY --chown=node:node --from=build /home/node/build/dist/ ./dist/
+COPY src/ ./src/
+COPY public/ ./public/
+COPY server/ ./server/
+COPY resources/ ./resources/
+COPY index.html vite.config.ts tsconfig.json tsconfig.node.json ./
+
+ENV NODE_ENV=production
+RUN bun run build && bun run build:server
+
+
+##########################################################
+FROM cgr.dev/chainguard/glibc-dynamic:latest@sha256:2827063c9efb4ba971d8621eb75f4e61b8d19850a6293a797df37358cc6f687b
+LABEL maintainer="kernoeb <kernoeb@protonmail.com>"
+
+WORKDIR /app
+
+COPY --from=ghcr.io/tarampampam/microcheck:1@sha256:c9f79cd408626de7c10f2d487d67339f49adf0ba61dde96ede65343269db1f85 /bin/httpcheck /bin/httpcheck
+
+COPY --from=build /app/server/ddj ./server
+COPY --from=build /app/dist/ ./dist/
+
+ENV NODE_ENV=production
+ENV PORT=3000
 
 HEALTHCHECK --interval=15s --timeout=5s --retries=5 \
-  CMD ["curl", "http://localhost:3000"]
+  CMD ["/bin/httpcheck", "http://127.0.0.1:3000/countries"]
 
 EXPOSE 3000
-CMD ["dumb-init", "node", "--max-old-space-size=1024", "server/app.js"]
+CMD ["./server"]
