@@ -175,8 +175,16 @@ onMounted(async () => {
             <!-- SVG text fills the width exactly. A white halo sits behind a dark outline, so it reads on both themes -->
             <svg viewBox="0 0 1000 150" role="img" aria-label="Drapeau du jour" class="block h-auto w-full overflow-visible">
               <defs>
+                <!-- Mixes the flag 25% toward white, so dark colours like navy stand out from the dark outline -->
+                <filter id="title-lighten" color-interpolation-filters="sRGB">
+                  <feComponentTransfer>
+                    <feFuncR type="linear" slope="0.75" intercept="0.25" />
+                    <feFuncG type="linear" slope="0.75" intercept="0.25" />
+                    <feFuncB type="linear" slope="0.75" intercept="0.25" />
+                  </feComponentTransfer>
+                </filter>
                 <pattern id="title-flag" patternUnits="userSpaceOnUse" width="1000" height="150">
-                  <image :href="`/flags/${answer.flag}.png`" width="1000" height="150" preserveAspectRatio="none" />
+                  <image :href="`/flags/${answer.flag}.png`" width="1000" height="150" preserveAspectRatio="none" filter="url(#title-lighten)" />
                 </pattern>
               </defs>
               <text
